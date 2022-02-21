@@ -5,8 +5,9 @@ const jwt = require("jsonwebtoken");
 const { json } = require("body-parser");
 
 const { PlayList, Song, User } = require("../DL/models/indexModels");
+const user = require("../BL/userLogic");
 
-const DEFULT_PLAYLIST_NAME = "my firts play list";
+// const DEFULT_PLAYLIST_NAME = "my firts play list";
 
 router.get("/", async (req, res) => {
   const usersList = await User.find({});
@@ -18,56 +19,25 @@ router.get("/", async (req, res) => {
 
 router.post("/register", async (req, res) => {
   try {
-    const hashedPassword = await bycrypt.hash(req.body.password, 10);
-    const newUser = await new User({
-      username: req.body.username,
-      password: hashedPassword,
-    }).save();
-    const accessToken = await jwt.sign(
-      JSON.stringify(newUser),
-      process.env.TOKEN_SECRET
-    );
+    const newUser = await user.register(req.body);
 
-    console.log("new user was saved");
-
-    // cerate defulte playlist
-    const newPlaylist = await new PlayList({
-      playlistName: DEFULT_PLAYLIST_NAME,
-      user: newUser._id,
-    }).save();
-    console.log("defult playlist was created", newPlaylist);
-
-    res.send({
-      username: newUser.username,
-      // password: newUser.password,
-      accessToken: accessToken,
-    });
+    res.json(newUser);
   } catch (e) {
     console.log(e);
     res.status(500).json({ messege: "internal server eror" });
   }
 });
 
+// log in user:
+
 router.post("/login", async (req, res) => {
   try {
-    console.log(req.body.username);
-    const user = await User.findOne({ username: req.body.username });
-    console.log(user);
-    if (!user) {
-      return res.status(400).json({ messege: "Invalid credentials" });
-    }
-
-    const match = await bycrypt.compare(req.body.password, user.password);
-
-    if (match) {
-      const accessToken = jwt.sign(
-        JSON.stringify(user),
-        process.env.TOKEN_SECRET
-      );
-      console.log("user athorised");
-      res.send({ accessToken: accessToken });
+    console.log("$$$");
+    const userlogin = await user.login(req.body);
+    if (userlogin.accessToken) {
+      res.json({ accessToken: userlogin.accessToken });
     } else {
-      return res.status(400).json({ messege: "Invalid credentials" });
+      return res.status(400).json({ messege: userlogin.messege });
     }
   } catch (e) {
     console.log(e);
