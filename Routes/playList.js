@@ -1,3 +1,5 @@
+// TODO: move logic to BL and controlers to DL
+
 const express = require("express");
 const router = express.Router();
 const { PlayList, Song } = require("../DL/models/indexModels");
@@ -6,8 +8,6 @@ const { PlayList, Song } = require("../DL/models/indexModels");
 
 router.get("/playlist/:playlistName", async (req, res) => {
   try {
-    console.log("%%%%");
-    console.log("!!!!");
     const playlistName = req.params.playlistName;
     const user = req.user;
     const playlist = await PlayList.findOne({
@@ -25,7 +25,7 @@ router.get("/playlist/:playlistName", async (req, res) => {
 //get all playlist for user
 router.get("/userplaylists", async (req, res) => {
   try {
-    console.log("$$$");
+    // console.log("$$$");
     const user = req.user;
     const playlists = await PlayList.find({
       user: user._id,

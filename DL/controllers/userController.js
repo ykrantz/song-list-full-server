@@ -1,5 +1,4 @@
 require("../db").connect();
-// TODO: add populate +find and delete by id
 const { User } = require("../models/indexModels");
 
 const createUser = async ({ username, password }) => {
