@@ -1,5 +1,3 @@
-require("../db").connect();
-
 const { Song } = require("../models/indexModels");
 
 const create = async ({ title, id, src, img, artist, provider }) => {

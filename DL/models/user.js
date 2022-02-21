@@ -5,7 +5,7 @@ const userSchema = new mongoose.Schema({
   password: {
     type: String,
     require: true,
-    // , select:false
+    select: false,
   },
   // playList: { type: mongoose.SchemaTypes.ObjectId, ref: "PlayList" },
 });

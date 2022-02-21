@@ -9,7 +9,11 @@ router.get("/search/:value", async (req, res) => {
     const searchValue = req.params.value;
 
     const ans = await apiSongs.searchFromApi(searchValue);
-    res.json(ans);
+    if (!ans.message) {
+      res.json(ans);
+    } else {
+      res.status(ans.status).json(ans);
+    }
   } catch (e) {
     console.log(e);
     res.status(500).json({ message: "internal server eror" });

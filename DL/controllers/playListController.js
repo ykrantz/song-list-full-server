@@ -1,5 +1,3 @@
-require("../db").connect();
-
 const { PlayList } = require("../models/indexModels");
 
 const create = async ({ playlistName, user }) => {

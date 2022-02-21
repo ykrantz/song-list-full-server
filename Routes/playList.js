@@ -114,27 +114,32 @@ router.put("/deletesong", async (req, res) => {
 
 router.post("/", async (req, res) => {
   try {
-    console.log("###");
     const playlistName = req.body.playlistName;
     const userID = req.user._id;
-    console.log("body", req.body);
-    console.log("playlistName", playlistName, userID);
 
-    const playlist = await PlayList.findOne({
-      user: userID,
-      playlistName: playlistName,
-    });
-
-    if (!playlist) {
-      console.log("no playlist");
-      const newPlaylist = await new PlayList({
-        playlistName: playlistName,
+    if (playlistName.length < 15) {
+      const playlist = await PlayList.findOne({
         user: userID,
-      }).save();
-      console.log("playlist was creates", newPlaylist);
-      res.json(newPlaylist);
+        playlistName: playlistName,
+      });
+
+      if (!playlist) {
+        console.log("no playlist");
+        const newPlaylist = await new PlayList({
+          playlistName: playlistName,
+          user: userID,
+        }).save();
+        console.log("playlist was creates", newPlaylist);
+        res.json(newPlaylist);
+      } else {
+        res.status(403).json({ message: "playlist already exsist" });
+      }
     } else {
-      res.status(403).json({ message: "playlist already exsist" });
+      res
+        .status(400)
+        .json({
+          message: "too long name. please pick name less than 15 letters",
+        });
     }
   } catch (e) {
     console.log(e);

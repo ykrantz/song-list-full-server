@@ -1,4 +1,7 @@
 const searchFromApi = (value) => {
+  if (value.length > 20) {
+    return { message: "Too long. try less than 20 letters", status: 400 };
+  }
   const axios = require("axios").default;
   const options = {
     method: "GET",

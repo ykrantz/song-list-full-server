@@ -1,7 +1,6 @@
-require("../db").connect();
 const { User } = require("../models/indexModels");
 
-const createUser = async ({ username, password }) => {
+const create = async ({ username, password }) => {
   return await User.create({
     username,
     password,
@@ -9,6 +8,10 @@ const createUser = async ({ username, password }) => {
 };
 const findOne = async (filter) => {
   return await User.findOne(filter);
+};
+
+const findOneAndSelect = async (filter, selectedFeilds) => {
+  return await User.findOne(filter).select(selectedFeilds);
 };
 const findById = async (id) => {
   return await User.findById(id);
@@ -26,8 +29,9 @@ const deleteOne = async (filter) => {
 };
 
 module.exports = {
-  createUser,
+  create,
   findOne,
+  findOneAndSelect,
   findById,
   findAll,
   updateOne,

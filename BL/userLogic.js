@@ -6,21 +6,27 @@ const jwt = require("jsonwebtoken");
 const DEFULT_PLAYLIST_NAME = "my firts play list";
 
 const register = async (userDetails) => {
-  console.log("%%%");
-  const userExists = await user.findOne({ username: userDetails.username });
-  console.log({ userExists });
+  const isUserDetailsEror = checkErorUserDetails(userDetails);
+  console.log({ isUserDetailsEror });
+  if (isUserDetailsEror) {
+    return isUserDetailsEror;
+  }
+  const userExists = await user.findOne({
+    username: userDetails.username,
+  });
   if (userExists) {
-    return { messege: "user already exsists" };
+    return { message: "user already exsists", status: 403 };
   }
   const hashedPassword = await bycrypt.hash(userDetails.password, 10);
 
-  const newUser = await user.createUser({
+  const newUser = await user.create({
     username: userDetails.username,
     password: hashedPassword,
   });
 
+  const userToken = { _id: newUser._id, username: newUser.username };
   const accessToken = await jwt.sign(
-    JSON.stringify(newUser),
+    JSON.stringify(userToken),
     process.env.TOKEN_SECRET
   );
 
@@ -41,23 +47,61 @@ const register = async (userDetails) => {
 };
 
 const login = async (userDetails) => {
-  const userDb = await user.findOne({ username: userDetails.username });
+  const isUserDetailsEror = checkErorUserDetails(userDetails);
+  console.log({ isUserDetailsEror });
+  if (isUserDetailsEror) {
+    return isUserDetailsEror;
+  }
+
+  const userDb = await user.findOneAndSelect(
+    {
+      username: userDetails.username,
+    },
+    "+password"
+  );
   if (!userDb) {
-    return { messege: "Invalid credentials" };
+    return { status: 401, message: "Invalid credentials" };
   }
 
   const match = await bycrypt.compare(userDetails.password, userDb.password);
 
   if (match) {
+    const userToken = { _id: userDb._id, username: userDb.username };
     const accessToken = jwt.sign(
-      JSON.stringify(userDb),
+      JSON.stringify(userToken),
       process.env.TOKEN_SECRET
     );
     console.log("user athorised");
     return { accessToken: accessToken };
   } else {
-    return { messege: "Invalid credentials" };
+    return { status: 401, message: "Invalid credentials" };
   }
+};
+
+const checkErorUserDetails = (userDetails) => {
+  if (!userDetails.username || !userDetails.password) {
+    return { status: 400, message: "please enter user name and password" };
+  } else if (
+    userDetails.username.length < 1 ||
+    userDetails.password.length < 3
+  ) {
+    return {
+      status: 400,
+      message:
+        "please enter user name more than 2 letters , and password more than 4 letters",
+    };
+  } else if (
+    userDetails.username.length >= 15 ||
+    userDetails.password.length >= 30
+  ) {
+    return {
+      status: 400,
+      message:
+        "please enter user name less than 15 letters , and password less than 30 letters",
+    };
+  }
+
+  return false;
 };
 
 module.exports = { register, login };

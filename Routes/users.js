@@ -11,8 +11,8 @@ router.post("/register", async (req, res) => {
     if (newUser.username) {
       res.json(newUser);
     } else {
-      console.log({ message: newUser.messege });
-      res.status(403).json({ message: newUser.messege });
+      console.log({ message: newUser.message });
+      res.status(newUser.status).json({ message: newUser.message });
     }
   } catch (e) {
     console.log(e);
@@ -28,11 +28,12 @@ router.post("/login", async (req, res) => {
     if (userlogin.accessToken) {
       res.json({ accessToken: userlogin.accessToken });
     } else {
-      return res.status(400).json({ messege: userlogin.messege });
+      console.log({ userlogin });
+      return res.status(userlogin.status).json({ message: userlogin.message });
     }
   } catch (e) {
     console.log(e);
-    res.status(500).json({ messege: "internal server eror" });
+    res.status(500).json({ message: "internal server eror" });
   }
 });
 
