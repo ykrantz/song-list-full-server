@@ -2,3 +2,6 @@
 .env
 
 node_modules
+
+# aws key:
+ykrantz-key.pem
