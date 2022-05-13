@@ -47,7 +47,7 @@ app.use("/playlist", authJWT, playlistRoute);
 // ***********
 
 // look fpr PORT in env. if not exsist will put 5000 in port
-const port = process.env.PORT;
+const port = process.env.PORT || 5000;
 
 connectDB().then(() => {
   console.log("************************************");
