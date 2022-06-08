@@ -5,3 +5,5 @@ node_modules
 
 # aws key:
 ykrantz-key.pem
+
+TEST.txt
