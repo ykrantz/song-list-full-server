@@ -58,7 +58,10 @@ router.put("/", async (req, res) => {
       songs: { $in: songId },
     });
     if (exsitSongInPlayList) {
-      res.status(403).json({ message: "song already exsist in playlist" });
+      console.log("song already exsist in playlist");
+      return res
+        .status(403)
+        .json({ message: "song already exsist in playlist" });
     }
 
     const updatedPlaylist = await PlayList.findOneAndUpdate(
@@ -135,11 +138,9 @@ router.post("/", async (req, res) => {
         res.status(403).json({ message: "playlist already exsist" });
       }
     } else {
-      res
-        .status(400)
-        .json({
-          message: "too long name. please pick name less than 15 letters",
-        });
+      res.status(400).json({
+        message: "too long name. please pick name less than 15 letters",
+      });
     }
   } catch (e) {
     console.log(e);
