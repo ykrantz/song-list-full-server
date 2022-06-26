@@ -3,7 +3,7 @@ const playList = require("../DL/controllers/playListController");
 
 const bycrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const DEFULT_PLAYLIST_NAME = "my firts play list";
+const DEFULT_PLAYLIST_NAME = "My Favorites";
 
 const register = async (userDetails) => {
   const isUserDetailsEror = checkErorUserDetails(userDetails);
