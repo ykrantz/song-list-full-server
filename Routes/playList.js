@@ -84,22 +84,26 @@ router.put("/", async (req, res) => {
 
 router.put("/deletesong", async (req, res) => {
   try {
+    console.log(777);
     const playlistName = req.body.playlistName;
     // gets song mongo id
-    const songId = req.body.songId;
+    const id = req.body.id;
     const user = req.user;
-
-    console.log({ playlistName });
-    console.log({ songId });
+    let song_Id = await Song.findOne({ id: id }).select("_id");
+    // let songId = await Song.findOne({ id: id }).select("_id");
+    let songId = song_Id._id;
+    console.log({ playlistName }, songId, 888);
+    // console.log({ songId });
     console.log("user._id", user._id);
 
     const updatedPlaylist = await PlayList.findOneAndUpdate(
-      { playlistName: playlistName, songs: songId, user: user._id },
+      // { playlistName: playlistName, songs: songId, user: user._id },
+      { playlistName: playlistName, user: user._id },
       { $pull: { songs: songId } },
 
       { new: true }
-    );
-    console.log({ updatedPlaylist });
+    ).populate("songs");
+    console.log(updatedPlaylist.songs[0], 15);
 
     if (updatedPlaylist) {
       console.log("###");
