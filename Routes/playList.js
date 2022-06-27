@@ -89,9 +89,12 @@ router.put("/deletesong", async (req, res) => {
     // gets song mongo id
     const id = req.body.id;
     const user = req.user;
-    let song_Id = await Song.findOne({ id: id }).select("_id");
+    let songId = await Song.findOne({ id: id }).select("_id");
+    console.log(id, songId, 52);
     // let songId = await Song.findOne({ id: id }).select("_id");
-    let songId = song_Id._id;
+    songId = songId._id;
+    console.log(songId, 53);
+
     console.log({ playlistName }, songId, 888);
     // console.log({ songId });
     console.log("user._id", user._id);
