@@ -25,7 +25,6 @@ router.get("/playlist/:playlistName", async (req, res) => {
 //get all playlist for user
 router.get("/userplaylists", async (req, res) => {
   try {
-    // console.log("$$$");
     const user = req.user;
     const playlists = await PlayList.find({
       user: user._id,
@@ -84,23 +83,15 @@ router.put("/", async (req, res) => {
 
 router.put("/deletesong", async (req, res) => {
   try {
-    console.log(777);
     const playlistName = req.body.playlistName;
     // gets song mongo id
     const id = req.body.id;
     const user = req.user;
     let songId = await Song.findOne({ id: id }).select("_id");
     console.log(id, songId, 52);
-    // let songId = await Song.findOne({ id: id }).select("_id");
     songId = songId._id;
-    console.log(songId, 53);
-
-    console.log({ playlistName }, songId, 888);
-    // console.log({ songId });
-    console.log("user._id", user._id);
 
     const updatedPlaylist = await PlayList.findOneAndUpdate(
-      // { playlistName: playlistName, songs: songId, user: user._id },
       { playlistName: playlistName, user: user._id },
       { $pull: { songs: songId } },
 
@@ -109,7 +100,6 @@ router.put("/deletesong", async (req, res) => {
     console.log(updatedPlaylist.songs[0], 15);
 
     if (updatedPlaylist) {
-      console.log("###");
       res.json(updatedPlaylist);
     } else {
       res.status(403).json({ message: "no song was found" });
@@ -164,7 +154,6 @@ router.delete("/deleteplaylist/:playlistName", async (req, res) => {
       playlistName: playlistName,
     });
     console.log("play list deleted");
-    console.log({ deletedPlaylist });
     res.json(deletedPlaylist);
   } catch (e) {
     console.log(e);

@@ -7,19 +7,15 @@ const apiSongs = require("../BL/apiSongsLogic");
 router.get("/search/:value", async (req, res) => {
   try {
     const searchValue = req.params.value;
-    console.log("68*****");
     const ans = await apiSongs.searchFromApi(searchValue);
-    console.log(ans?.statusCode, ans?.res?.statusCode, "***", 67);
     if (!ans?.message) {
       res.json(ans);
     } else {
       res.status(ans.status).json(ans);
     }
   } catch (e) {
-    console.log("$%#%#");
     console.log(e);
     if (e?.code === 429) {
-      console.log("yes$$");
       res.status(e.code).json({
         message: e.message + " of all users. We are sorry. please try later",
       });

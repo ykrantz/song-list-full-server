@@ -7,7 +7,6 @@ const DEFULT_PLAYLIST_NAME = "My Favorites";
 
 const register = async (userDetails) => {
   const isUserDetailsEror = checkErorUserDetails(userDetails);
-  console.log({ isUserDetailsEror });
   if (isUserDetailsEror) {
     return isUserDetailsEror;
   }
@@ -48,7 +47,6 @@ const register = async (userDetails) => {
 
 const login = async (userDetails) => {
   const isUserDetailsEror = checkErorUserDetails(userDetails);
-  console.log({ isUserDetailsEror });
   if (isUserDetailsEror) {
     return isUserDetailsEror;
   }

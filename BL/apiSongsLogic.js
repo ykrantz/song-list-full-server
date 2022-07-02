@@ -6,7 +6,9 @@ const searchFromApi = async (value) => {
   if (value.length > 20) {
     return { message: "Too long. try less than 20 letters", status: 400 };
   }
-  console.log({ value }, 14);
+  // pick random key. in order to use less request in each key . becuase of high cost
+  const randomApiKey = ApiKeys[pickRandomKey(0, 1)];
+  console.log({ randomApiKey });
   const axios = require("axios").default;
   const options = {
     method: "GET",
@@ -14,7 +16,7 @@ const searchFromApi = async (value) => {
     params: { q: value },
     headers: {
       "x-rapidapi-host": "youtube-search-results.p.rapidapi.com",
-      "x-rapidapi-key": ApiKeys[1],
+      "x-rapidapi-key": randomApiKey,
     },
   };
 
@@ -24,12 +26,10 @@ const searchFromApi = async (value) => {
       const resultsVideoList = response.data.items.filter(
         (item) => item.type == "video"
       );
-      // console.log(resultsVideoList[0], { rapidKey });
       return resultsVideoList;
     })
     .catch(function (error) {
-      // console.error("EROR :", error);
-      console.log(error?.response?.status, 13);
+      console.error("EROR :", error);
       if (error?.response?.status === 429) {
         throw {
           code: error?.response?.status,
@@ -39,4 +39,7 @@ const searchFromApi = async (value) => {
     });
 };
 
+const pickRandomKey = (min, max) => {
+  return min + Math.floor(Math.random() * (max - min + 1));
+};
 module.exports = { searchFromApi };
