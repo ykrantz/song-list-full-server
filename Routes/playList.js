@@ -25,7 +25,6 @@ router.get("/playlist/:playlistName", async (req, res) => {
 //get all playlist for user
 router.get("/userplaylists", async (req, res) => {
   try {
-    // console.log("$$$");
     const user = req.user;
     const playlists = await PlayList.find({
       user: user._id,
@@ -49,7 +48,7 @@ router.put("/", async (req, res) => {
       const newSong = await new Song({
         ...song,
       }).save();
-      console.log("song was creates", newSong);
+      console.log("song was creates");
       songId = newSong._id;
     }
     const exsitSongInPlayList = await PlayList.findOne({
@@ -72,7 +71,7 @@ router.put("/", async (req, res) => {
       { $push: { songs: songId } },
       { new: true }
     );
-    console.log("updated playlist", updatedPlaylist);
+    console.log("updated playlist");
     res.json(updatedPlaylist);
   } catch (e) {
     console.log(e);
@@ -86,23 +85,19 @@ router.put("/deletesong", async (req, res) => {
   try {
     const playlistName = req.body.playlistName;
     // gets song mongo id
-    const songId = req.body.songId;
+    const id = req.body.id;
     const user = req.user;
-
-    console.log({ playlistName });
-    console.log({ songId });
-    console.log("user._id", user._id);
+    let songId = await Song.findOne({ id: id }).select("_id");
+    songId = songId._id;
 
     const updatedPlaylist = await PlayList.findOneAndUpdate(
-      { playlistName: playlistName, songs: songId, user: user._id },
+      { playlistName: playlistName, user: user._id },
       { $pull: { songs: songId } },
 
       { new: true }
-    );
-    console.log({ updatedPlaylist });
+    ).populate("songs");
 
     if (updatedPlaylist) {
-      console.log("###");
       res.json(updatedPlaylist);
     } else {
       res.status(403).json({ message: "no song was found" });
@@ -157,7 +152,6 @@ router.delete("/deleteplaylist/:playlistName", async (req, res) => {
       playlistName: playlistName,
     });
     console.log("play list deleted");
-    console.log({ deletedPlaylist });
     res.json(deletedPlaylist);
   } catch (e) {
     console.log(e);

@@ -11,7 +11,6 @@ router.post("/register", async (req, res) => {
     if (newUser.username) {
       res.json(newUser);
     } else {
-      console.log({ message: newUser.message });
       res.status(newUser.status).json({ message: newUser.message });
     }
   } catch (e) {
@@ -28,7 +27,6 @@ router.post("/login", async (req, res) => {
     if (userlogin.accessToken) {
       res.json({ accessToken: userlogin.accessToken });
     } else {
-      console.log({ userlogin });
       return res.status(userlogin.status).json({ message: userlogin.message });
     }
   } catch (e) {

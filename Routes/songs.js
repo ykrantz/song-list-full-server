@@ -9,7 +9,6 @@ router.get("/favorite/:songId", async (req, res) => {
       req.params.songId
     );
 
-    console.log({ playlistsWithSong });
     res.json(playlistsWithSong);
   } catch (e) {
     res.status(500).json({ message: "internal server eror" });
