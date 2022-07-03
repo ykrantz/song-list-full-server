@@ -48,7 +48,7 @@ router.put("/", async (req, res) => {
       const newSong = await new Song({
         ...song,
       }).save();
-      console.log("song was creates", newSong);
+      console.log("song was creates");
       songId = newSong._id;
     }
     const exsitSongInPlayList = await PlayList.findOne({
@@ -71,7 +71,7 @@ router.put("/", async (req, res) => {
       { $push: { songs: songId } },
       { new: true }
     );
-    console.log("updated playlist", updatedPlaylist);
+    console.log("updated playlist");
     res.json(updatedPlaylist);
   } catch (e) {
     console.log(e);
@@ -88,7 +88,6 @@ router.put("/deletesong", async (req, res) => {
     const id = req.body.id;
     const user = req.user;
     let songId = await Song.findOne({ id: id }).select("_id");
-    console.log(id, songId, 52);
     songId = songId._id;
 
     const updatedPlaylist = await PlayList.findOneAndUpdate(
@@ -97,7 +96,6 @@ router.put("/deletesong", async (req, res) => {
 
       { new: true }
     ).populate("songs");
-    console.log(updatedPlaylist.songs[0], 15);
 
     if (updatedPlaylist) {
       res.json(updatedPlaylist);
