@@ -10,6 +10,7 @@ router.get("/search/:value", async (req, res) => {
     const searchValue = req.params.value;
     const ans = await apiSongs.searchFromApi(searchValue);
     if (!ans?.message) {
+      console.log(ans);
       res.json(ans);
     } else {
       res.status(ans.status).json(ans);

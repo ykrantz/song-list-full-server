@@ -35,4 +35,14 @@ router.post("/login", async (req, res) => {
   }
 });
 
+// init connect to server
+router.get("/initailconnection", async (req, res) => {
+  try {
+    res.json({ message: "Successly conected to server " });
+  } catch {
+    console.log(e);
+    res.status(500).json({ message: "internal server eror" });
+  }
+});
+
 module.exports = router;
